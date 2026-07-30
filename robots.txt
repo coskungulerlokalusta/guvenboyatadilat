@@ -2,4 +2,4 @@ User-agent: *
 Allow: /
 Disallow: /admin.html
 
-Sitemap: https://www.guvenboya.com/sitemap.xml
+Sitemap: https://www.guvenboyatadilat.com/sitemap.xml
