@@ -378,6 +378,8 @@
   @media (max-width:700px){ .related-grid{grid-template-columns:1fr;} .district-grid{grid-template-columns:1fr 1fr;} .blog-grid{grid-template-columns:1fr;} }
 </style>
 
+<script src="config.js"></script>
+<script src="site-loader.js" defer></script>
 </head>
 <body>
 
@@ -409,7 +411,7 @@
 
   <section>
     <div class="wrap">
-      <div class="blog-grid">
+      <div class="blog-grid" id="blogGrid">
       <a class="blog-card fade-up" href="dis-cephe-boyasi-ne-zaman-yapilmali.html"><div class="eyebrow">Güvenboya Blog</div><h3>Dış Cephe Boyası Ne Zaman Yapılmalı?</h3><p>İstanbul'da dış cephe boyaması için en doğru zamanlama, hava koşulları ve dikkat edilmesi gereken noktalar.</p></a>
       <a class="blog-card fade-up" href="dis-cephe-boyasi-kac-yil-dayanir.html"><div class="eyebrow">Güvenboya Blog</div><h3>Dış Cephe Boyası Kaç Yıl Dayanır?</h3><p>Cephe boyasının ömrünü etkileyen faktörler ve İstanbul koşullarında ortalama dayanım süresi.</p></a>
       <a class="blog-card fade-up" href="catida-su-kacagi-belirtileri.html"><div class="eyebrow">Güvenboya Blog</div><h3>Çatıda Su Kaçağı Belirtileri Nelerdir?</h3><p>Üst kat dairelerde görülen nem, leke ve küf gibi belirtilerin çatı izolasyon sorunuyla ilişkisi.</p></a>
@@ -441,6 +443,29 @@
     entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); obs.unobserve(e.target); } });
   }, {threshold:0.15});
   document.querySelectorAll('.fade-up').forEach(el=>obs.observe(el));
+
+  // Panelden eklenen yazıları da listeye ekle
+  (function(){
+    var API_URL = window.GUVENBOYA_API_URL;
+    if (!API_URL) return;
+    fetch(API_URL + '?action=get_posts')
+      .then(function(r){ return r.json(); })
+      .then(function(data){
+        var posts = (data && data.posts) || [];
+        var grid = document.getElementById('blogGrid');
+        posts.forEach(function(p){
+          var a = document.createElement('a');
+          a.className = 'blog-card fade-up in';
+          a.href = 'blog-post.html?slug=' + encodeURIComponent(p.Slug);
+          var excerpt = p.Ozet || (p.Icerik || '').slice(0, 120) + '...';
+          a.innerHTML = '<div class="eyebrow">Güvenboya Blog</div><h3></h3><p></p>';
+          a.querySelector('h3').textContent = p.Baslik;
+          a.querySelector('p').textContent = excerpt;
+          grid.prepend(a);
+        });
+      })
+      .catch(function(){});
+  })();
   // Güvenlik: JS herhangi bir nedenle gecikirse/çalışmazsa metin kalıcı olarak
   // görünmez kalmasın diye kısa bir süre sonra tüm .fade-up öğeleri zorla gösterilir.
   setTimeout(()=>{ document.querySelectorAll('.fade-up').forEach(el=>el.classList.add('in')); }, 1200);

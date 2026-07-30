@@ -346,6 +346,18 @@
   .stat-card span{font-size:13px; color:var(--charcoal-70);}
   .admin-panel{background:var(--cream-card); border:1px solid var(--line); border-radius:6px; padding:24px; margin-bottom:28px;}
   .admin-panel h2{font-size:19px; margin-bottom:16px;}
+  .tab-btn{
+    background:none; border:none; padding:12px 20px; font-size:14.5px; font-weight:600;
+    color:var(--charcoal-70); cursor:pointer; border-bottom:2px solid transparent; margin-bottom:-1px;
+  }
+  .tab-btn.active{color:var(--clay-dark); border-bottom-color:var(--clay);}
+  .tab-btn:hover{color:var(--clay-dark);}
+  .image-slot-card{background:#fff; border:1px solid var(--line); border-radius:6px; padding:14px;}
+  .image-slot-card b{font-size:13.5px; display:block; margin-bottom:4px;}
+  .image-slot-card small{color:var(--charcoal-70); font-size:11.5px; display:block; margin-bottom:10px; word-break:break-all;}
+  .image-slot-card img{width:100%; aspect-ratio:4/3; object-fit:cover; border-radius:4px; margin-bottom:10px; background:var(--plaster);}
+  .image-slot-card input[type=file]{font-size:12px; width:100%;}
+  .image-status{font-size:12px; margin-top:6px;}
   .toolbar{display:flex; gap:12px; margin-bottom:16px; flex-wrap:wrap;}
   .toolbar input, .toolbar select{padding:9px 12px; border:1px solid var(--line); border-radius:4px; font-size:14px; font-family:'Work Sans',sans-serif;}
   table{width:100%; border-collapse:collapse; font-size:14px;}
@@ -364,6 +376,8 @@
   @media (max-width:900px){ .stat-grid{grid-template-columns:1fr 1fr;} .services-editor{grid-template-columns:1fr;} }
 </style>
 
+<script src="config.js"></script>
+<script src="site-loader.js" defer></script>
 </head>
 <body class="admin">
 
@@ -397,39 +411,95 @@
 
     <div class="stat-grid" id="statGrid"></div>
 
-    <div class="admin-panel">
-      <h2>Gelen Talepler</h2>
-      <div class="toolbar">
-        <input type="text" id="searchBox" placeholder="İsim veya telefon ara..." style="min-width:220px;" oninput="renderLeads()">
-        <select id="statusFilter" onchange="renderLeads()">
-          <option value="">Tüm Durumlar</option>
-          <option value="yeni">Yeni</option>
-          <option value="aranacak">Aranacak</option>
-          <option value="tamamlandi">Tamamlandı</option>
-        </select>
-        <select id="serviceFilter" onchange="renderLeads()">
-          <option value="">Tüm Hizmetler</option>
-          <option value="Dış Cephe Boyama">Dış Cephe Boyama</option>
-          <option value="Çatı / Dam İzolasyonu">Çatı / Dam İzolasyonu</option>
-          <option value="Su Yalıtımı">Su Yalıtımı</option>
-          <option value="Bakım / Onarım">Bakım / Onarım</option>
-        </select>
-        <button class="btn btn-ghost" style="padding:9px 16px; font-size:13px;" onclick="loadLeadsFromBackend()">↻ Yenile</button>
-      </div>
-      <table>
-        <thead>
-          <tr>
-            <th>Ad Soyad</th><th>Telefon</th><th>Hizmet</th><th>Bölge</th><th>Tarih</th><th>Durum</th>
-          </tr>
-        </thead>
-        <tbody id="leadsBody"></tbody>
-      </table>
+    <div class="admin-tabs" style="display:flex; gap:4px; margin-bottom:24px; border-bottom:1px solid var(--line);">
+      <button class="tab-btn active" data-tab="leads" onclick="switchTab('leads')">Talepler</button>
+      <button class="tab-btn" data-tab="settings" onclick="switchTab('settings')">Ayarlar</button>
+      <button class="tab-btn" data-tab="posts" onclick="switchTab('posts')">Blog Yazıları</button>
+      <button class="tab-btn" data-tab="images" onclick="switchTab('images')">Fotoğraflar</button>
     </div>
 
-    <div class="admin-panel">
-      <h2>Hizmet Listesi (site içeriği önizleme)</h2>
-      <p class="note" style="margin-bottom:14px;">Bu alan, ana sayfadaki hizmet kartlarının başlıklarını hızlıca gözden geçirmenizi sağlar. Değişiklikler yalnızca bu oturumda görünür; siteye yansıması için index.html dosyasındaki ilgili metnin de güncellenmesi gerekir.</p>
-      <div class="services-editor" id="servicesEditor"></div>
+    <!-- TALEPLER -->
+    <div class="tab-content" id="tab-leads">
+      <div class="admin-panel">
+        <h2>Gelen Talepler</h2>
+        <div class="toolbar">
+          <input type="text" id="searchBox" placeholder="İsim veya telefon ara..." style="min-width:220px;" oninput="renderLeads()">
+          <select id="statusFilter" onchange="renderLeads()">
+            <option value="">Tüm Durumlar</option>
+            <option value="yeni">Yeni</option>
+            <option value="aranacak">Aranacak</option>
+            <option value="tamamlandi">Tamamlandı</option>
+          </select>
+          <select id="serviceFilter" onchange="renderLeads()">
+            <option value="">Tüm Hizmetler</option>
+            <option value="Dış Cephe Boyama">Dış Cephe Boyama</option>
+            <option value="Çatı / Dam İzolasyonu">Çatı / Dam İzolasyonu</option>
+            <option value="Su Yalıtımı">Su Yalıtımı</option>
+            <option value="Bakım / Onarım">Bakım / Onarım</option>
+          </select>
+          <button class="btn btn-ghost" style="padding:9px 16px; font-size:13px;" onclick="loadLeadsFromBackend()">↻ Yenile</button>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Ad Soyad</th><th>Telefon</th><th>Hizmet</th><th>Bölge</th><th>Tarih</th><th>Durum</th>
+            </tr>
+          </thead>
+          <tbody id="leadsBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- AYARLAR -->
+    <div class="tab-content" id="tab-settings" style="display:none;">
+      <div class="admin-panel">
+        <h2>İletişim Ayarları</h2>
+        <p class="note" style="margin-bottom:18px;">Burada değiştirdiğiniz bilgiler, sitedeki <b>tüm sayfalarda</b> (telefon, WhatsApp, e-posta, adres linkleri) otomatik olarak güncellenir — herhangi bir dosya yeniden yüklemenize gerek yoktur.</p>
+        <div class="services-editor" id="settingsEditor" style="grid-template-columns:1fr 1fr; display:grid; gap:14px;"></div>
+        <button class="btn btn-primary" style="margin-top:20px; border:none; cursor:pointer;" onclick="saveSettings()">Ayarları Kaydet</button>
+        <p id="settingsMsg" style="margin-top:10px; font-size:13.5px;"></p>
+      </div>
+    </div>
+
+    <!-- BLOG YAZILARI -->
+    <div class="tab-content" id="tab-posts" style="display:none;">
+      <div class="admin-panel">
+        <h2>Yeni Blog Yazısı Ekle</h2>
+        <p class="note" style="margin-bottom:14px;">Not: Bu alandan eklediğiniz yazılar otomatik olarak <code>blog.html</code>'de listelenir ve kendi sayfasında yayınlanır. Sitenin hazır 6 blog yazısı ayrı dosyalar olduğu için buradan düzenlenemez.</p>
+        <div style="display:grid; gap:12px; max-width:640px;">
+          <div>
+            <label for="postTitleInput">Başlık</label>
+            <input id="postTitleInput" type="text" placeholder="Örn: Kışın Cephe Bakımı Nasıl Yapılır?">
+          </div>
+          <div>
+            <label for="postExcerptInput">Kısa Özet (listede görünür)</label>
+            <input id="postExcerptInput" type="text" placeholder="1-2 cümlelik kısa özet">
+          </div>
+          <div>
+            <label for="postContentInput">İçerik</label>
+            <textarea id="postContentInput" rows="8" placeholder="Yazının tam metni... (paragrafları boş satırla ayırabilirsiniz)"></textarea>
+          </div>
+          <button class="btn btn-primary" style="justify-self:start; border:none; cursor:pointer;" onclick="createNewPost()">Yayınla</button>
+          <p id="postMsg" style="font-size:13.5px;"></p>
+        </div>
+      </div>
+
+      <div class="admin-panel">
+        <h2>Yayınlanan Yazılar (panelden eklenenler)</h2>
+        <table>
+          <thead><tr><th>Başlık</th><th>Tarih</th><th>Durum</th><th></th></tr></thead>
+          <tbody id="postsBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- FOTOĞRAFLAR -->
+    <div class="tab-content" id="tab-images" style="display:none;">
+      <div class="admin-panel">
+        <h2>Site Fotoğrafları</h2>
+        <p class="note" style="margin-bottom:18px;">Her kutunun altındaki "Dosya Seç" ile bir fotoğraf yükleyin — o fotoğraf sitede ilgili yerde (aynı anahtar isimli <code>images/xxx.jpg</code> yuvasında) otomatik olarak görünmeye başlar.</p>
+        <div class="services-editor" id="imagesEditor" style="grid-template-columns:1fr 1fr 1fr; display:grid; gap:16px;"></div>
+      </div>
     </div>
 
   </div>
@@ -438,7 +508,7 @@
 <script>
   // ---- backend/KURULUM.md dosyasındaki adımları uygulayıp kendi Apps Script
   // Web App URL'nizi aşağıya yazın ----
-  const API_URL = null; // örn: "https://script.google.com/macros/s/AKfycb.../exec"
+  const API_URL = window.GUVENBOYA_API_URL; // config.js dosyasından okunur
 
   let adminKey = '';
   let leads = [];
@@ -448,13 +518,6 @@
     {ID:"demo-1", AdSoyad:"Mehmet Yıldız", Telefon:"0532 111 22 33", Hizmet:"Dış Cephe Boyama", Ilce:"Kadıköy", Tarih:new Date().toISOString(), Durum:"yeni"},
     {ID:"demo-2", AdSoyad:"Ayşe Kara", Telefon:"0533 222 33 44", Hizmet:"Çatı / Dam İzolasyonu", Ilce:"Üsküdar", Tarih:"2026-07-17T10:00:00.000Z", Durum:"aranacak"},
     {ID:"demo-3", AdSoyad:"Nova Sitesi Yönetimi", Telefon:"0212 333 44 55", Hizmet:"Su Yalıtımı", Ilce:"Beşiktaş", Tarih:"2026-07-15T10:00:00.000Z", Durum:"tamamlandi"},
-  ];
-
-  let services = [
-    "Dış Cephe Boyama",
-    "Çatı / Dam İzolasyonu",
-    "Su Yalıtımı",
-    "Bakım, Onarım & Renovasyon"
   ];
 
   async function tryLogin(){
@@ -587,18 +650,213 @@
     }
   }
 
-  function renderServices(){
-    document.getElementById('servicesEditor').innerHTML = services.map((s, i) => `
-      <div class="service-edit-row">
-        <input type="text" value="${s}" onchange="services[${i}] = this.value">
+  /* ================= SEKME GEÇİŞİ ================= */
+  function switchTab(tab){
+    document.querySelectorAll('.tab-content').forEach(el => el.style.display = 'none');
+    document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+    document.getElementById('tab-' + tab).style.display = 'block';
+    document.querySelector('.tab-btn[data-tab="' + tab + '"]').classList.add('active');
+    if (tab === 'settings' && !settingsLoaded) loadSettings();
+    if (tab === 'posts' && !postsLoaded) loadPosts();
+    if (tab === 'images' && !imagesLoaded) loadImages();
+  }
+
+  /* ================= AYARLAR ================= */
+  let settingsLoaded = false;
+  let currentSettings = {};
+  const SETTINGS_LABELS = {
+    telefon_goruntu: 'Telefon (görünen, ör. 0 532 642 47 38)',
+    telefon_link: 'Telefon (arama linki, ör. +905326424738)',
+    whatsapp_link: 'WhatsApp numarası (ör. +905326424738)',
+    eposta: 'E-posta adresi',
+    adres: 'Adres / bölge yazısı',
+    instagram: 'Instagram linki'
+  };
+
+  async function loadSettings(){
+    const editor = document.getElementById('settingsEditor');
+    editor.innerHTML = '<p class="note">Yükleniyor...</p>';
+    if (!API_URL){
+      editor.innerHTML = '<p class="note">Backend bağlı değil, ayarlar demo modda düzenlenemez. backend/KURULUM.md dosyasını uygulayın.</p>';
+      return;
+    }
+    try{
+      const res = await fetch(API_URL + '?action=get_settings');
+      const data = await res.json();
+      currentSettings = data.settings || {};
+      settingsLoaded = true;
+      renderSettingsForm();
+    }catch(err){
+      editor.innerHTML = '<p class="note">Ayarlar yüklenemedi.</p>';
+    }
+  }
+
+  function renderSettingsForm(){
+    const editor = document.getElementById('settingsEditor');
+    editor.innerHTML = Object.keys(SETTINGS_LABELS).map(key => `
+      <div class="full">
+        <label>${SETTINGS_LABELS[key]}</label>
+        <input type="text" data-setting-key="${key}" value="${(currentSettings[key]||'').toString().replace(/"/g,'&quot;')}">
       </div>
     `).join('');
+  }
+
+  async function saveSettings(){
+    const inputs = document.querySelectorAll('[data-setting-key]');
+    const newSettings = {};
+    inputs.forEach(i => newSettings[i.getAttribute('data-setting-key')] = i.value);
+    const msg = document.getElementById('settingsMsg');
+    if (!API_URL){ msg.textContent = 'Backend bağlı değil.'; return; }
+    msg.textContent = 'Kaydediliyor...';
+    try{
+      await fetch(API_URL, {
+        method:'POST', mode:'no-cors', headers:{'Content-Type':'text/plain;charset=utf-8'},
+        body: JSON.stringify({ action:'update_settings', key: adminKey, settings: newSettings })
+      });
+      msg.textContent = 'Kaydedildi ✓ (siteye yansıması birkaç saniye sürebilir)';
+      currentSettings = newSettings;
+    }catch(err){
+      msg.textContent = 'Kaydetme başarısız.';
+    }
+  }
+
+  /* ================= BLOG YAZILARI ================= */
+  let postsLoaded = false;
+  let currentPosts = [];
+
+  async function loadPosts(){
+    const body = document.getElementById('postsBody');
+    body.innerHTML = '<tr><td colspan="4">Yükleniyor...</td></tr>';
+    if (!API_URL){ body.innerHTML = '<tr><td colspan="4">Backend bağlı değil.</td></tr>'; return; }
+    try{
+      const res = await fetch(API_URL + '?action=get_posts_admin&key=' + encodeURIComponent(adminKey));
+      const data = await res.json();
+      currentPosts = data.posts || [];
+      postsLoaded = true;
+      renderPosts();
+    }catch(err){
+      body.innerHTML = '<tr><td colspan="4">Yazılar yüklenemedi.</td></tr>';
+    }
+  }
+
+  function renderPosts(){
+    const body = document.getElementById('postsBody');
+    if (!currentPosts.length){ body.innerHTML = '<tr class="empty-row"><td colspan="4">Henüz panelden eklenmiş yazı yok.</td></tr>'; return; }
+    body.innerHTML = currentPosts.map(p => `
+      <tr>
+        <td>${p.Baslik}</td>
+        <td>${(p.Tarih||'').slice(0,10)}</td>
+        <td>${p.Durum}</td>
+        <td><button class="btn btn-ghost" style="padding:6px 12px; font-size:12px;" onclick="deletePostRow('${p.ID}')">Sil</button></td>
+      </tr>
+    `).join('');
+  }
+
+  async function createNewPost(){
+    const title = document.getElementById('postTitleInput').value.trim();
+    const excerpt = document.getElementById('postExcerptInput').value.trim();
+    const content = document.getElementById('postContentInput').value.trim();
+    const msg = document.getElementById('postMsg');
+    if (!title || !content){ msg.textContent = 'Başlık ve içerik zorunlu.'; return; }
+    if (!API_URL){ msg.textContent = 'Backend bağlı değil.'; return; }
+    msg.textContent = 'Yayınlanıyor...';
+    try{
+      await fetch(API_URL, {
+        method:'POST', mode:'no-cors', headers:{'Content-Type':'text/plain;charset=utf-8'},
+        body: JSON.stringify({ action:'create_post', key: adminKey, title, excerpt, content, status:'yayinda' })
+      });
+      msg.textContent = 'Yayınlandı ✓';
+      document.getElementById('postTitleInput').value = '';
+      document.getElementById('postExcerptInput').value = '';
+      document.getElementById('postContentInput').value = '';
+      setTimeout(loadPosts, 800);
+    }catch(err){
+      msg.textContent = 'Yayınlama başarısız.';
+    }
+  }
+
+  async function deletePostRow(id){
+    if (!API_URL) return;
+    try{
+      await fetch(API_URL, {
+        method:'POST', mode:'no-cors', headers:{'Content-Type':'text/plain;charset=utf-8'},
+        body: JSON.stringify({ action:'delete_post', key: adminKey, id })
+      });
+      currentPosts = currentPosts.filter(p => p.ID !== id);
+      renderPosts();
+    }catch(err){}
+  }
+
+  /* ================= FOTOĞRAFLAR ================= */
+  let imagesLoaded = false;
+  let currentImages = {};
+  const IMAGE_SLOTS = [
+    {key:'hero-oncesi', label:'Ana Sayfa — Öncesi Fotoğrafı'},
+    {key:'hero-sonrasi', label:'Ana Sayfa — Sonrası Fotoğrafı'},
+    {key:'hizmet-cephe-boyama', label:'Hizmet — Dış Cephe Boyama'},
+    {key:'hizmet-cati-izolasyon', label:'Hizmet — Çatı / Dam İzolasyonu'},
+    {key:'hizmet-su-yalitimi', label:'Hizmet — Su Yalıtımı'},
+    {key:'hizmet-bakim-onarim', label:'Hizmet — Bakım / Onarım'},
+    {key:'proje-1', label:'Proje Fotoğrafı 1'},
+    {key:'proje-2', label:'Proje Fotoğrafı 2'},
+    {key:'proje-3', label:'Proje Fotoğrafı 3'},
+    {key:'proje-4', label:'Proje Fotoğrafı 4'},
+    {key:'proje-5', label:'Proje Fotoğrafı 5'}
+  ];
+
+  async function loadImages(){
+    const editor = document.getElementById('imagesEditor');
+    editor.innerHTML = '<p class="note">Yükleniyor...</p>';
+    if (!API_URL){ editor.innerHTML = '<p class="note">Backend bağlı değil.</p>'; return; }
+    try{
+      const res = await fetch(API_URL + '?action=get_images');
+      const data = await res.json();
+      currentImages = data.images || {};
+      imagesLoaded = true;
+      renderImages();
+    }catch(err){
+      editor.innerHTML = '<p class="note">Fotoğraflar yüklenemedi.</p>';
+    }
+  }
+
+  function renderImages(){
+    const editor = document.getElementById('imagesEditor');
+    editor.innerHTML = IMAGE_SLOTS.map(slot => `
+      <div class="image-slot-card">
+        <b>${slot.label}</b>
+        <small>images/${slot.key}.jpg</small>
+        <img src="${currentImages[slot.key] || ''}" onerror="this.style.opacity=0.15" alt="">
+        <input type="file" accept="image/*" onchange="uploadImageFile('${slot.key}', this)">
+        <div class="image-status" id="imgstatus-${slot.key}"></div>
+      </div>
+    `).join('');
+  }
+
+  function uploadImageFile(key, input){
+    const file = input.files[0];
+    if (!file) return;
+    const status = document.getElementById('imgstatus-' + key);
+    if (!API_URL){ status.textContent = 'Backend bağlı değil.'; return; }
+    status.textContent = 'Yükleniyor...';
+    const reader = new FileReader();
+    reader.onload = async function(){
+      try{
+        await fetch(API_URL, {
+          method:'POST', mode:'no-cors', headers:{'Content-Type':'text/plain;charset=utf-8'},
+          body: JSON.stringify({ action:'upload_image', key: adminKey, imageKey: key, base64: reader.result })
+        });
+        status.textContent = 'Yüklendi ✓ (görünmesi biraz sürebilir)';
+        setTimeout(loadImages, 1200);
+      }catch(err){
+        status.textContent = 'Yükleme başarısız.';
+      }
+    };
+    reader.readAsDataURL(file);
   }
 
   function renderAll(){
     renderStats();
     renderLeads();
-    renderServices();
   }
 </script>
 </body>
