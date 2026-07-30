@@ -1,0 +1,8 @@
+# Bu klasördeki Code.gs, ADMIN_KEY gizli anahtarınızı içerir.
+# GitHub Pages deposu genellikle herkese açıktır — bu yüzden backend/
+# klasörünü bu repoya DAHİL ETMEYİN. Apps Script kodu zaten Google'da
+# (script.google.com) yaşıyor, GitHub'a yüklenmesine gerek yok.
+backend/
+
+.DS_Store
+Thumbs.db
