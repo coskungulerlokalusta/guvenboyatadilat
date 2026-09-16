@@ -25,6 +25,7 @@
       }
     });
     if (!replaced) {
+      // metin düğümü yoksa (ör. saf metin öğesi), son çare olarak textContent kullan
       if (el.children.length === 0) el.textContent = newText;
     }
   }

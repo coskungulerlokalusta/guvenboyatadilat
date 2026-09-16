@@ -386,6 +386,15 @@
   .related-card .eyebrow{margin-bottom:6px;}
   .related-card h3{font-size:15.5px; color:var(--charcoal);}
   .district-grid{display:grid; grid-template-columns:repeat(5,1fr); gap:12px;}
+  .mahalle-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:10px;}
+  .mahalle-chip{
+    display:block; text-align:center; background:var(--cream-card); border:1px solid var(--line);
+    border-radius:6px; padding:12px 6px; text-decoration:none; font-size:13px; font-weight:600; color:var(--charcoal);
+    transition:transform .2s ease, background .2s ease;
+  }
+  .mahalle-chip:hover{background:var(--clay); color:var(--cream-card); transform:translateY(-2px);}
+  @media (max-width:900px){ .mahalle-grid{grid-template-columns:repeat(3,1fr);} }
+  @media (max-width:700px){ .mahalle-grid{grid-template-columns:1fr 1fr;} }
   .district-chip{
     display:block; text-align:center; background:var(--cream-card); border:1px solid var(--line);
     border-radius:6px; padding:14px 8px; text-decoration:none; font-size:13.5px; font-weight:600; color:var(--charcoal);
@@ -454,6 +463,25 @@
           <p>Keşif ve teklif tamamen ücretsizdir, karar sizin.</p>
         </div>
         <a href="index.html#iletisim" class="btn btn-primary">Form Doldur</a>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="section-head fade-up">
+        <div class="eyebrow">Mahalleye Özel Sayfalar</div>
+        <h2>Kadıköy'de hizmet verdiğimiz mahalleler</h2>
+      </div>
+      <div class="mahalle-grid fade-up">
+        <a class="mahalle-chip" href="moda-boyaci.html">Moda</a>
+        <a class="mahalle-chip" href="caferaga-boyaci.html">Caferağa</a>
+        <a class="mahalle-chip" href="fenerbahce-boyaci.html">Fenerbahçe</a>
+        <a class="mahalle-chip" href="goztepe-boyaci.html">Göztepe</a>
+        <a class="mahalle-chip" href="suadiye-boyaci.html">Suadiye</a>
+        <a class="mahalle-chip" href="bostanci-boyaci.html">Bostancı</a>
+        <a class="mahalle-chip" href="kozyatagi-boyaci.html">Kozyatağı</a>
+        <a class="mahalle-chip" href="erenkoy-boyaci.html">Erenköy</a>
       </div>
     </div>
   </section>
