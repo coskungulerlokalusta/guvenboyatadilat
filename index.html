@@ -705,6 +705,9 @@
         body: JSON.stringify(payload)
       });
       showFormMessage(form, 'Teşekkürler! Talebiniz alındı, en kısa sürede dönüş yapacağız.', false);
+      if (typeof gtag === 'function') {
+        gtag('event', 'conversion', {'send_to': 'AW-800993101/20-GCJyrzv4cEM3e-P0C'});
+      }
       form.reset();
     } catch(err){
       showFormMessage(form, 'Bir sorun oluştu, lütfen bizi doğrudan arayın: 0532 642 47 38', true);
