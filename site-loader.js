@@ -8,6 +8,26 @@
  * şey yapmaz, sayfa statik haliyle kalır.
  */
 (function () {
+  // Fotoğrafı yüklenen kutulardan "fotoğraf ekle" kesik çerçevesini kaldırır.
+  function markPhotoSlot(img) {
+    var slot = img.closest('.photo-slot');
+    if (!slot) return;
+    var loaded = img.complete && img.naturalWidth > 0 && img.style.display !== 'none';
+    slot.classList.toggle('has-photo', loaded);
+  }
+  function watchPhotoSlots() {
+    document.querySelectorAll('.photo-slot img').forEach(function (img) {
+      img.addEventListener('load', function () { markPhotoSlot(img); });
+      img.addEventListener('error', function () { markPhotoSlot(img); });
+      markPhotoSlot(img);
+    });
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', watchPhotoSlots);
+  } else {
+    watchPhotoSlots();
+  }
+
   var API_URL = window.GUVENBOYA_API_URL;
   if (!API_URL) return;
 
