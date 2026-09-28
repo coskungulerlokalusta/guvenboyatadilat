@@ -488,6 +488,7 @@
 
 <script src="config.js"></script>
 <script src="site-loader.js" defer></script>
+<script src="call-bar.js" defer></script>
 <script>
   const obs = new IntersectionObserver((entries)=>{
     entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); obs.unobserve(e.target); } });
